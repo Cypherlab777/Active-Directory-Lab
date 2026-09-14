@@ -45,8 +45,6 @@ The lab is primarily isolated from my physical home network using an **Internal 
 
 ## 🗺️ Architecture
 
-![Active Directory Lab Topology](assets/topology-overview.png)
-
 The environment will progressively evolve as additional servers, clients, and Active Directory services are added.
 
 ```mermaid
