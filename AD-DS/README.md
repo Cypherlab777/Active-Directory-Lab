@@ -1,206 +1,206 @@
-# Lab Windows Server 2025 — Active Directory Domain Services
+# Windows Server 2025 Lab — Active Directory Domain Services
 
-## 🎯 Objectif
+## 🎯 Objective
 
-Déployer mon premier contrôleur de domaine sous **Windows Server 2025** avec Hyper-V.
+Deploy my first domain controller running **Windows Server 2025** using Hyper-V.
 
-L'objectif de ce lab est de mettre en pratique :
+The objective of this lab is to practice:
 
-* la préparation d'un serveur Windows Server ;
-* l'installation d'Active Directory Domain Services ;
-* la création d'un domaine ;
-* DNS ;
-* SYSVOL et NETLOGON ;
-* la compréhension des principaux composants d'un contrôleur de domaine.
+* preparing a Windows Server system;
+* installing Active Directory Domain Services;
+* creating a domain;
+* DNS;
+* SYSVOL and NETLOGON;
+* understanding the main components of a domain controller.
 
 ---
 
 ## 🏗️ Architecture
 
-| Élément     | Configuration               |
-| ----------- | --------------------------- |
-| Hyperviseur | Hyper-V sur Windows 11      |
-| Serveur     | `LAB-DC01`                  |
-| OS          | Windows Server 2025         |
-| Rôle        | Contrôleur de domaine + DNS |
-| Domaine     | `Homelab.local`             |
-| NetBIOS     | `HOMELAB`                   |
-| Réseau      | vSwitch Internal            |
+| Component  | Configuration           |
+| ---------- | ----------------------- |
+| Hypervisor | Hyper-V on Windows 11   |
+| Server     | `LAB-DC01`              |
+| OS         | Windows Server 2025     |
+| Role       | Domain Controller + DNS |
+| Domain     | `Homelab.local`         |
+| NetBIOS    | `HOMELAB`               |
+| Network    | Internal vSwitch        |
 
-Le vSwitch **Internal** permet aux machines virtuelles du lab de communiquer entre elles et avec l'hôte Hyper-V, sans être directement connectées au réseau physique principal.
+The **Internal vSwitch** allows the virtual machines in the lab to communicate with each other and with the Hyper-V host without being directly connected to the main physical network.
 
-J'ai temporairement utilisé un vSwitch **External** pour effectuer l'activation de Windows et les mises à jour du serveur.
+I temporarily used an **External vSwitch** to activate Windows and install server updates.
 
 ---
 
-## 🖥️ Préparation du serveur
+## 🖥️ Server Preparation
 
-Configuration de la VM :
+VM configuration:
 
-* Génération 2 ;
-* 4 Go de RAM ;
-* disque VHDX dynamique ;
+* Generation 2;
+* 4 GB of RAM;
+* dynamically expanding VHDX disk;
 * Windows Server 2025.
 
-Avant l'installation d'Active Directory :
+Before installing Active Directory:
 
-* renommage du serveur en `LAB-DC01` ;
-* configuration d'une adresse IPv4 statique ;
-* configuration du serveur DNS vers lui-même, car `LAB-DC01` héberge également le service DNS du domaine.
+* renamed the server to `LAB-DC01`;
+* configured a static IPv4 address;
+* configured the DNS server to point to itself because `LAB-DC01` also hosts the DNS service for the domain.
 
-Un contrôleur de domaine doit conserver une adresse IP stable.
+A domain controller should maintain a stable IP address.
 
-Active Directory dépend fortement de DNS pour localiser les contrôleurs de domaine et les différents services du domaine.
+Active Directory relies heavily on DNS to locate domain controllers and the different services available within the domain.
 
 ---
 
-## 🧩 Installation d'AD DS
+## 🧩 AD DS Installation
 
-Depuis **Server Manager** :
+From **Server Manager**:
 
 `Manage → Add Roles and Features → Active Directory Domain Services`
 
-L'installation du rôle **Active Directory Domain Services** ajoute les composants nécessaires à AD DS.
+Installing the **Active Directory Domain Services** role adds the components required for AD DS.
 
-Une fois le rôle installé, le serveur doit ensuite être **promu en contrôleur de domaine**.
+Once the role is installed, the server must then be **promoted to a domain controller**.
 
 ---
 
-## 🏢 Création du domaine
+## 🏢 Domain Creation
 
-Comme il s'agit du premier contrôleur de domaine de mon lab, j'ai choisi :
+Because this is the first domain controller in my lab, I selected:
 
 `Add a new forest`
 
-Domaine :
+Domain:
 
 `Homelab.local`
 
-Nom NetBIOS :
+NetBIOS name:
 
 `HOMELAB`
 
-Cette opération crée une nouvelle forêt Active Directory ainsi que le premier domaine de cette forêt.
+This operation creates a new Active Directory forest as well as the first domain within that forest.
 
 ---
 
 ## 🌳 Functional Levels
 
-Configuration choisie :
+Selected configuration:
 
-* Forest Functional Level : **Windows Server 2025**
-* Domain Functional Level : **Windows Server 2025**
+* Forest Functional Level: **Windows Server 2025**
+* Domain Functional Level: **Windows Server 2025**
 
-Les Functional Levels déterminent notamment les fonctionnalités Active Directory disponibles ainsi que les versions de Windows Server pouvant être utilisées comme contrôleurs de domaine.
+Functional Levels determine, among other things, which Active Directory features are available and which versions of Windows Server can be used as domain controllers.
 
-Ils ne déterminent pas la version de Windows utilisée par les postes clients ou les serveurs membres du domaine.
+They do not determine which versions of Windows can be used by domain clients or member servers.
 
-J'ai choisi **Windows Server 2025** car mon environnement est neuf et tous les futurs contrôleurs de domaine du lab utiliseront Windows Server 2025.
+I selected **Windows Server 2025** because my environment is new and all future domain controllers in the lab will use Windows Server 2025.
 
-Je n'ai donc pas besoin de conserver une compatibilité avec d'anciennes versions de Windows Server.
+Therefore, I do not need to maintain compatibility with older versions of Windows Server.
 
-Autres options :
+Other options:
 
-* DNS Server : activé ;
-* Global Catalog : activé ;
-* RODC : non utilisé, car le premier contrôleur de domaine d'un nouveau domaine ne peut pas être un Read-Only Domain Controller.
+* DNS Server: enabled;
+* Global Catalog: enabled;
+* RODC: not used, because the first domain controller of a new domain cannot be a Read-Only Domain Controller.
 
-Un mot de passe **DSRM** est également défini.
+A **DSRM** password is also configured.
 
-DSRM (*Directory Services Restore Mode*) peut être utilisé pour certaines opérations de récupération ou de maintenance d'Active Directory.
+DSRM (*Directory Services Restore Mode*) can be used for certain Active Directory recovery or maintenance operations.
 
-Après la vérification des prérequis, le serveur est promu en contrôleur de domaine puis redémarre.
+After the prerequisite checks are completed, the server is promoted to a domain controller and then restarted.
 
 ---
 
 ## 💾 NTDS.dit
 
-La base Active Directory est stockée par défaut dans :
+The Active Directory database is stored by default in:
 
 `C:\Windows\NTDS\ntds.dit`
 
-Elle contient notamment :
+It contains, among other things:
 
-* les utilisateurs ;
-* les groupes ;
-* les ordinateurs ;
-* les Organizational Units ;
-* les informations du domaine.
+* users;
+* groups;
+* computers;
+* Organizational Units;
+* domain information.
 
-Chaque contrôleur de domaine possède sa propre copie de la base Active Directory.
+Each domain controller has its own copy of the Active Directory database.
 
-`ntds.dit` constitue donc l'un des éléments essentiels d'un contrôleur de domaine.
+`ntds.dit` is therefore one of the essential components of a domain controller.
 
 ---
 
-## 📂 SYSVOL et NETLOGON
+## 📂 SYSVOL and NETLOGON
 
-Active Directory crée également le dossier :
+Active Directory also creates the following directory:
 
 `C:\Windows\SYSVOL`
 
-SYSVOL contient notamment les fichiers nécessaires aux **Group Policy Objects (GPO)** ainsi que certains scripts utilisés dans le domaine.
+SYSVOL contains, among other things, the files required by **Group Policy Objects (GPOs)** as well as certain scripts used within the domain.
 
-Après la promotion du serveur, deux partages réseau importants sont disponibles :
+After the server is promoted, two important network shares are available:
 
 * `SYSVOL`
 * `NETLOGON`
 
 ### SYSVOL
 
-Depuis mon contrôleur de domaine, le partage est accessible avec :
+From my domain controller, the share can be accessed using:
 
 `\\LAB-DC01\SYSVOL`
 
-SYSVOL contient les fichiers que les ordinateurs et utilisateurs du domaine doivent pouvoir récupérer pour appliquer certaines configurations Active Directory.
+SYSVOL contains files that domain computers and users need to access in order to apply certain Active Directory configurations.
 
-Par exemple, lorsqu'une GPO est appliquée à un ordinateur ou à un utilisateur, une partie de sa configuration est récupérée depuis SYSVOL.
+For example, when a GPO is applied to a computer or user, part of its configuration is retrieved from SYSVOL.
 
-Ces fichiers doivent être disponibles sur les contrôleurs de domaine afin que les mêmes stratégies puissent être utilisées dans l'ensemble du domaine.
+These files must be available on the domain controllers so that the same policies can be used throughout the domain.
 
 ### NETLOGON
 
-Le partage est accessible avec :
+The share can be accessed using:
 
 `\\LAB-DC01\NETLOGON`
 
-NETLOGON permet notamment de rendre disponibles des **scripts de connexion** aux utilisateurs du domaine.
+NETLOGON is used, among other things, to make **logon scripts** available to domain users.
 
-Par exemple, un script peut être exécuté automatiquement lorsqu'un utilisateur ouvre sa session.
+For example, a script can be executed automatically when a user signs in.
 
-Le partage NETLOGON expose notamment le dossier `scripts` présent dans l'arborescence SYSVOL.
+The NETLOGON share exposes, among other things, the `scripts` folder located within the SYSVOL directory structure.
 
-SYSVOL et NETLOGON sont créés automatiquement lors de la promotion du serveur en contrôleur de domaine.
-
----
-
-## ✅ Vérifications
-
-Après l'installation, j'ai vérifié :
-
-* la présence du domaine `Homelab.local` ;
-* le rôle Active Directory Domain Services ;
-* le rôle DNS ;
-* la zone DNS du domaine ;
-* le partage `\\LAB-DC01\SYSVOL` ;
-* le partage `\\LAB-DC01\NETLOGON`.
+SYSVOL and NETLOGON are created automatically when the server is promoted to a domain controller.
 
 ---
 
-## 📌 Points retenus
+## ✅ Verification
 
-Ce lab m'a permis de comprendre que :
+After the installation, I verified:
 
-* un contrôleur de domaine doit utiliser une adresse IP stable ;
-* DNS est essentiel au fonctionnement d'Active Directory ;
-* installer le rôle AD DS ne suffit pas : le serveur doit ensuite être promu en contrôleur de domaine ;
-* le premier contrôleur de domaine d'une nouvelle forêt crée également le premier domaine ;
-* les Functional Levels déterminent notamment les fonctionnalités AD DS disponibles et les versions de Windows Server pouvant être utilisées comme contrôleurs de domaine ;
-* `ntds.dit` contient la base Active Directory ;
-* SYSVOL contient notamment les fichiers nécessaires aux GPO ;
-* NETLOGON est utilisé notamment pour mettre à disposition des scripts de connexion ;
-* NETLOGON est lié à l'arborescence SYSVOL ;
-* DNS, `ntds.dit`, SYSVOL et NETLOGON font partie des composants importants à comprendre lors du déploiement d'un contrôleur de domaine.
+* the presence of the `Homelab.local` domain;
+* the Active Directory Domain Services role;
+* the DNS role;
+* the domain DNS zone;
+* the `\\LAB-DC01\SYSVOL` share;
+* the `\\LAB-DC01\NETLOGON` share.
+
+---
+
+## 📌 Key Takeaways
+
+This lab helped me understand that:
+
+* a domain controller should use a stable IP address;
+* DNS is essential to the operation of Active Directory;
+* installing the AD DS role is not enough: the server must then be promoted to a domain controller;
+* the first domain controller in a new forest also creates the first domain;
+* Functional Levels determine, among other things, which AD DS features are available and which versions of Windows Server can be used as domain controllers;
+* `ntds.dit` contains the Active Directory database;
+* SYSVOL contains, among other things, the files required by GPOs;
+* NETLOGON is used, among other things, to provide logon scripts;
+* NETLOGON is linked to the SYSVOL directory structure;
+* DNS, `ntds.dit`, SYSVOL, and NETLOGON are important components to understand when deploying a domain controller.
 
 ---
 
@@ -208,4 +208,4 @@ Ce lab m'a permis de comprendre que :
 
 * Microsoft Learn — Active Directory Domain Services
 * Microsoft Learn — Windows Server 2025
-* Cours *Windows Server 2025 Administration* — Kevin Brown
+* *Windows Server 2025 Administration* course — Kevin Brown
