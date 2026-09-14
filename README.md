@@ -61,7 +61,7 @@ flowchart TD
 
 | Lab | Description | Status |
 | --- | --- | --- |
-| [Active Directory Domain Services](AD-DS/) | Deployment of the first Windows Server 2025 Domain Controller and creation of the `Homelab.local` forest and domain | ✅ Completed |
+| [Active Directory Domain Services](Lab-01-AD-DS/) | Deployment of the first Windows Server 2025 Domain Controller and creation of the `Homelab.local` forest and domain | ✅ Completed |
 | More labs coming soon | This section will evolve as the homelab grows and new Active Directory topics are explored | 🚧 In progress |
 
 ---
