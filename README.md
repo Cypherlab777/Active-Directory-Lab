@@ -64,30 +64,24 @@ flowchart TD
 | Lab | Description | Status |
 | --- | --- | --- |
 | [Active Directory Domain Services](AD-DS/) | Deployment of the first Windows Server 2025 Domain Controller and creation of the `Homelab.local` forest and domain | ✅ Completed |
-| Users, Groups and OUs | Active Directory object and Organizational Unit management | 🔜 Planned |
-| Group Policy | Creation and application of Group Policy Objects | 🔜 Planned |
-| Second Domain Controller | Deployment of an additional Domain Controller | 🔜 Planned |
-| Active Directory Replication | Testing and understanding AD DS replication | 🔜 Planned |
+| More labs coming soon | This section will evolve as the homelab grows and new Active Directory topics are explored | 🚧 In progress |
 
 ---
 
 ## 🧠 Concepts Covered
 
-Throughout these labs, I will progressively study and practice concepts such as:
+Throughout this project, I will progressively study and practice:
 
-- Forests
-- Trees
-- Domains
+- Forests, trees, and domains
 - Organizational Units
 - Domain Controllers
 - Functional Levels
 - Active Directory partitions
-- DNS
-- SYSVOL
-- NETLOGON
+- Replication and replication boundaries
+- DNS integration
+- SYSVOL and NETLOGON
 - Group Policy
 - Authentication
-- Active Directory replication
 - Redundancy
 
 ---
