@@ -99,7 +99,11 @@ From `LAB-DC01`:
 
 In the left pane, expanding `Homelab.local → Computers` shows the new `LAB-SRV1` object.
 
+![Overview](Screenshots/Computers.png)
+
 `LAB-DC01` itself does **not** appear there — it's listed separately under `Domain Controllers`.
+
+![Overview](Screenshots/Domain-Controllers.png)
 
 **Why they're separated:**
 
