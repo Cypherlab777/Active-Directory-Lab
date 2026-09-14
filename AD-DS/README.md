@@ -191,16 +191,29 @@ After the installation, I verified:
 
 This lab helped me understand that:
 
-* a domain controller should use a stable IP address;
-* DNS is essential to the operation of Active Directory;
-* installing the AD DS role is not enough: the server must then be promoted to a domain controller;
-* the first domain controller in a new forest also creates the first domain;
-* Functional Levels determine, among other things, which AD DS features are available and which versions of Windows Server can be used as domain controllers;
-* `ntds.dit` contains the Active Directory database;
-* SYSVOL contains, among other things, the files required by GPOs;
-* NETLOGON is used, among other things, to provide logon scripts;
-* NETLOGON is linked to the SYSVOL directory structure;
-* DNS, `ntds.dit`, SYSVOL, and NETLOGON are important components to understand when deploying a domain controller.
+* an Active Directory environment is organized hierarchically as **Forest → Tree → Domain**;
+* a **forest** is the highest-level Active Directory structure and can contain one or more domain trees;
+* a **tree** is a group of one or more domains that share a contiguous DNS namespace;
+* for example, `homelab.local` and `branch.homelab.local` would belong to the same domain tree because they share the `homelab.local` namespace;
+* a forest can contain multiple trees using different DNS namespaces;
+* a **domain** is a logical Active Directory structure that groups users, computers, groups, Organizational Units, and other directory objects;
+* domains within the same forest share important forest-wide components such as the **Schema** and **Configuration** partitions;
+* the **forest represents the main security boundary** in Active Directory;
+* the domain represents an important **administrative and replication boundary**, because domain-specific directory data is replicated between domain controllers belonging to that domain;
+* Active Directory uses **multi-master replication**, meaning that changes can normally be made on different writable domain controllers and then replicated to the other domain controllers;
+* not all Active Directory information has the same replication scope: domain-specific data is replicated within the domain, while forest-wide information such as the **Schema** and **Configuration** partitions is replicated across the forest;
+* having multiple domain controllers provides both **replication and redundancy**, reducing dependency on a single server;
+* **Domain Functional Levels** and **Forest Functional Levels** determine which Active Directory features can be used and which Windows Server versions are supported as domain controllers;
+* the **Domain Functional Level** applies to a specific domain, while the **Forest Functional Level** applies to the entire forest;
+* a domain controller should use a **stable IP address** because several Active Directory services depend on reliably locating that server;
+* **DNS is essential to Active Directory**, allowing clients and servers to locate domain controllers and other domain services;
+* installing the **AD DS role** does not automatically make a server a domain controller: the server must also be promoted;
+* creating the first domain controller with **Add a new forest** creates a new forest, its first tree, and its first domain;
+* `ntds.dit` contains the Active Directory database, including directory objects such as users, groups, computers, and Organizational Units;
+* **SYSVOL** stores files required by Active Directory, including files used by Group Policy;
+* **NETLOGON** makes resources such as logon scripts available to domain clients and is linked to the SYSVOL directory structure;
+* domains, trees, forests, DNS, `ntds.dit`, SYSVOL, NETLOGON, replication, and Functional Levels are all important components of an Active Directory environment.
+
 
 ---
 
