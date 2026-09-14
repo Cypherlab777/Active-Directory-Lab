@@ -1,5 +1,7 @@
 # Windows Server 2025 Lab — Active Directory Domain Services
 
+![Overview](Screenshots/AD-DS.png)
+
 ## 🎯 Objective
 
 Deploy my first domain controller running **Windows Server 2025** using Hyper-V.
