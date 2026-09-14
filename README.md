@@ -86,17 +86,6 @@ Throughout this project, I will progressively study and practice:
 
 ---
 
-## 🛠️ Technologies
-
-- Windows Server 2025
-- Windows 11
-- Hyper-V
-- Active Directory Domain Services
-- DNS
-- PowerShell
-
----
-
 ## 📚 Learning Resources
 
 This project is based on hands-on practice alongside:
